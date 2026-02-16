@@ -1,0 +1,13 @@
+---
+---
+
+<script is:inline>
+	const languages = ['en','es','fr',];
+	const defaultLang = 'en';
+
+	const browserLang = navigator.language.split('-')[0];
+
+	const target = languages.includes(browserLang) ? browserLang : defaultLang;
+
+	window.location.pathname = `/${target}`;
+</script>
