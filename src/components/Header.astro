@@ -1,0 +1,21 @@
+---
+const { lang = 'en' } = Astro.props;
+
+const localI18n = {
+    en: {'welcome': 'Welcome'},
+    es: {'welcome': 'Bienvenido'},
+    fr: {'welcome': 'Bienvenue'}
+}
+
+const t = localI18n[lang as keyof typeof localI18n];
+const prefix = 'header';
+---
+
+<h1 data-t="header.title">{t.welcome}</h1>
+
+<script class="i18n-partial" 
+    is:inline 
+    type="application/json" 
+    data-prefix= {prefix}
+    data-payload={JSON.stringify(localI18n)}>
+</script>

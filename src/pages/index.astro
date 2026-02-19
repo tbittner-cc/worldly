@@ -1,13 +1,25 @@
 ---
+import Base from '../layouts/Base.astro';
+
+import Header from '../components/Header.astro';
 ---
 
-<script is:inline>
-	const languages = ['en','es','fr',];
-	const defaultLang = 'en';
+<Base>
+	<Header lang="en" />
+	<script is:inline>
+		const masterDict = {en: {}, es: {}, fr: {}};
+		console.log('foo');
+		document.querySelectorAll('.i18n-partial').forEach(script => {
+			console.log(script);
 
-	const browserLang = navigator.language.split('-')[0];
+			const partial = JSON.parse(script.dataset.payload);
+			const prefix = script.dataset.prefix;
+			console.log(partial, prefix);
+			//const data = JSON.parse(el.textContent);
+			//masterDict[lang] = {...masterDict[lang], ...data};
+		});
 
-	const target = languages.includes(browserLang) ? browserLang : defaultLang;
+		window.setLanguage('en');
+	</script>
 
-	window.location.pathname = `/${target}`;
-</script>
+</Base>
