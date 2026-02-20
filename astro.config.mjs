@@ -10,9 +10,6 @@ export default defineConfig({
   trailingSlash: 'ignore',
 
   vite: {
-    plugins: [tailwindcss(),viteSingleFile()],
-    build: {
-      cssCodeSplit: false,
-    }
+    plugins: [tailwindcss()],
   }
 });

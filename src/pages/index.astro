@@ -1,25 +1,45 @@
 ---
 import Base from '../layouts/Base.astro';
-
 import Header from '../components/Header.astro';
 ---
 
 <Base>
-	<Header lang="en" />
+	<!-- In our current iteration, the lang attribute is not used.  It will 
+	 be useful if we decide to have a dropdown selector. -->
+	<Header lang='en' />
 	<script is:inline>
 		const masterDict = {en: {}, es: {}, fr: {}};
-		console.log('foo');
-		document.querySelectorAll('.i18n-partial').forEach(script => {
-			console.log(script);
+		function initTranslations() {
+			document.querySelectorAll('.i18n-partial').forEach(script => {
+				const partial = JSON.parse(script.dataset.payload);
+				const prefix = script.dataset.prefix;
+				for (const lang in partial) {
+					for (const key in partial[lang]) {
+						masterDict[lang][`${prefix}.${key}`] = partial[lang][key];
+					}
+				}
+			});
+		}
+	
+		window.setLanguage = (lang) => {
+			const dict = masterDict[lang] || masterDict['en'];	
+			document.querySelectorAll('[data-t]').forEach(el => {
+				const key = el.getAttribute('data-t');
+				if (dict[key]) 
+					el.textContent = dict[key];
+			});
+			document.documentElement.lang = lang;
+		}
 
-			const partial = JSON.parse(script.dataset.payload);
-			const prefix = script.dataset.prefix;
-			console.log(partial, prefix);
-			//const data = JSON.parse(el.textContent);
-			//masterDict[lang] = {...masterDict[lang], ...data};
-		});
+		function autoDetectLanguage() {
+			initTranslations();
+			const browser = navigator.language.split('-')[0];
+			const supported = Object.keys(masterDict);
 
-		window.setLanguage('en');
+			const targetLang = supported.includes(browser) ? browser : 'en';
+			window.setLanguage(targetLang);
+		}
+
+		autoDetectLanguage();
 	</script>
-
 </Base>
